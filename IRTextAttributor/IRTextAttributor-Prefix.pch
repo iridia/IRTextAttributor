@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'IRTextAttributor' target in the 'IRTextAttributor' project
+//
+
+#ifdef __OBJC__
+	#import <Foundation/Foundation.h>
+#endif
