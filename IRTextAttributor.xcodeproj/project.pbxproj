@@ -1,0 +1,258 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FF61D2FA14417E55008AB095 /* IRTextAttributionOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = FF61D2F814417E55008AB095 /* IRTextAttributionOperation.h */; };
+		FF61D2FB14417E55008AB095 /* IRTextAttributionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = FF61D2F914417E55008AB095 /* IRTextAttributionOperation.m */; };
+		FFF22384143774C3001B6773 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFF22383143774C3001B6773 /* Foundation.framework */; };
+		FFF2238A143774C3001B6773 /* IRTextAttributor.m in Sources */ = {isa = PBXBuildFile; fileRef = FFF22389143774C3001B6773 /* IRTextAttributor.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FF61D2F814417E55008AB095 /* IRTextAttributionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IRTextAttributionOperation.h; sourceTree = "<group>"; };
+		FF61D2F914417E55008AB095 /* IRTextAttributionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IRTextAttributionOperation.m; sourceTree = "<group>"; };
+		FF6F6E3C1440664F0050E79C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		FF6F6E3F144066500050E79C /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		FF6F6E40144066500050E79C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		FF6F6E41144066500050E79C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FFF22380143774C3001B6773 /* libIRTextAttributor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libIRTextAttributor.a; path = libIRTextAttributorTouch.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		FFF22383143774C3001B6773 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FFF22387143774C3001B6773 /* IRTextAttributor-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IRTextAttributor-Prefix.pch"; sourceTree = "<group>"; };
+		FFF22388143774C3001B6773 /* IRTextAttributor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRTextAttributor.h; sourceTree = "<group>"; };
+		FFF22389143774C3001B6773 /* IRTextAttributor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IRTextAttributor.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FFF2237D143774C3001B6773 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FFF22384143774C3001B6773 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FF6F6E3E144066500050E79C /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FF6F6E3F144066500050E79C /* AppKit.framework */,
+				FF6F6E40144066500050E79C /* CoreData.framework */,
+				FF6F6E41144066500050E79C /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		FFF22375143774C3001B6773 = {
+			isa = PBXGroup;
+			children = (
+				FFF22385143774C3001B6773 /* IRTextAttributor */,
+				FFF22382143774C3001B6773 /* Frameworks */,
+				FFF22381143774C3001B6773 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FFF22381143774C3001B6773 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FFF22380143774C3001B6773 /* libIRTextAttributor.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FFF22382143774C3001B6773 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FFF22383143774C3001B6773 /* Foundation.framework */,
+				FF6F6E3C1440664F0050E79C /* Cocoa.framework */,
+				FF6F6E3E144066500050E79C /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FFF22385143774C3001B6773 /* IRTextAttributor */ = {
+			isa = PBXGroup;
+			children = (
+				FFF22388143774C3001B6773 /* IRTextAttributor.h */,
+				FFF22389143774C3001B6773 /* IRTextAttributor.m */,
+				FF61D2F814417E55008AB095 /* IRTextAttributionOperation.h */,
+				FF61D2F914417E55008AB095 /* IRTextAttributionOperation.m */,
+				FFF22386143774C3001B6773 /* Supporting Files */,
+			);
+			path = IRTextAttributor;
+			sourceTree = "<group>";
+		};
+		FFF22386143774C3001B6773 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FFF22387143774C3001B6773 /* IRTextAttributor-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		FFF2237E143774C3001B6773 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF61D2FA14417E55008AB095 /* IRTextAttributionOperation.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		FFF2237F143774C3001B6773 /* IRTextAttributorTouch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FFF2238D143774C3001B6773 /* Build configuration list for PBXNativeTarget "IRTextAttributorTouch" */;
+			buildPhases = (
+				FFF2237C143774C3001B6773 /* Sources */,
+				FFF2237D143774C3001B6773 /* Frameworks */,
+				FFF2237E143774C3001B6773 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IRTextAttributorTouch;
+			productName = IRTextAttributor;
+			productReference = FFF22380143774C3001B6773 /* libIRTextAttributor.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FFF22377143774C3001B6773 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				ORGANIZATIONNAME = "Iridia Productions";
+			};
+			buildConfigurationList = FFF2237A143774C3001B6773 /* Build configuration list for PBXProject "IRTextAttributor" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FFF22375143774C3001B6773;
+			productRefGroup = FFF22381143774C3001B6773 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FFF2237F143774C3001B6773 /* IRTextAttributorTouch */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FFF2237C143774C3001B6773 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FFF2238A143774C3001B6773 /* IRTextAttributor.m in Sources */,
+				FF61D2FB14417E55008AB095 /* IRTextAttributionOperation.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		FFF2238B143774C3001B6773 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FFF2238C143774C3001B6773 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FFF2238E143774C3001B6773 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/IRTextAttributor.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "IRTextAttributor/IRTextAttributor-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		FFF2238F143774C3001B6773 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/IRTextAttributor.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "IRTextAttributor/IRTextAttributor-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FFF2237A143774C3001B6773 /* Build configuration list for PBXProject "IRTextAttributor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FFF2238B143774C3001B6773 /* Debug */,
+				FFF2238C143774C3001B6773 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FFF2238D143774C3001B6773 /* Build configuration list for PBXNativeTarget "IRTextAttributorTouch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FFF2238E143774C3001B6773 /* Debug */,
+				FFF2238F143774C3001B6773 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FFF22377143774C3001B6773 /* Project object */;
+}
