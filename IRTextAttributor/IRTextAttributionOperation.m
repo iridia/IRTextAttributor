@@ -8,7 +8,6 @@
 
 #import "IRTextAttributionOperation.h"
 
-
 @interface IRTextAttributionOperation ()
 
 @property (nonatomic, readwrite, assign) dispatch_queue_t actualDispatchQueue;
@@ -25,7 +24,15 @@
 @synthesize executing, finished;
 @synthesize workerBlock, workCompletionBlock;
 @synthesize actualDispatchQueue, results;
-@synthesize attributedString;
+
++ (IRTextAttributionOperation *) operationWithWorkerBlock:(void (^)(void(^)(id results)))aWorkerBlock completionBlock:(void(^)(id results))aCompletionBlock {
+
+	IRTextAttributionOperation *returnedOperation = [[[self alloc] init] autorelease];
+	returnedOperation.workerBlock = aWorkerBlock;
+	returnedOperation.workCompletionBlock = aCompletionBlock;
+	return returnedOperation;
+
+}
 
 - (void) dealloc {
 

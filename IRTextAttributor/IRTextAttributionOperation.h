@@ -16,6 +16,6 @@
 @property (nonatomic, readwrite, copy) void (^workerBlock)(void(^callbackBlock)(id results));
 @property (nonatomic, readwrite, copy) void (^workCompletionBlock)(id results);
 
-@property (nonatomic, readwrite, assign) NSAttributedString *attributedString;
++ (IRTextAttributionOperation *) operationWithWorkerBlock:(void (^)(void(^)(id results)))aWorkerBlock completionBlock:(void(^)(id results))aCompletionBlock;
 
 @end

@@ -10,20 +10,28 @@
 #import "IRTextAttributionOperation.h"
 
 
-static NSString * const kIRTextAttributorTaggingAttributeName = @"_IRTextAttributorTag";
+static NSString * const kIRTextAttributorTag = @"_IRTextAttributorTag";
 
 
 @interface IRTextAttributor ()
 
 @property (nonatomic, readwrite, retain) NSOperationQueue *queue;
+@property (nonatomic, readwrite, retain) NSCache *cache;
+
+- (void) performGlobalDiscovery;
+
+- (void) willLoadAttribute:(id)anAttribute forToken:(NSString *)aString inAttributedString:(NSAttributedString *)hostingAttributedString withSubstringRange:(NSRange)aRange;
+
+- (void) didLoadAttribute:(id)anAttribute forToken:(NSString *)aString inAttributedString:(NSAttributedString *)hostingAttributedString withSubstringRange:(NSRange)aRange;
 
 @end
 
 
 @implementation IRTextAttributor
 
-@synthesize delegate, potentialSubstringDiscoveryBlock, substringAttributingBlock;
-@synthesize queue;
+@synthesize attributedContent;
+@synthesize delegate, discoveryBlock, attributionBlock;
+@synthesize queue, cache;
 
 - (id) init {
 
@@ -32,6 +40,7 @@ static NSString * const kIRTextAttributorTaggingAttributeName = @"_IRTextAttribu
 		return nil;
 	
 	queue = [[NSOperationQueue alloc] init];
+	cache = [[NSCache alloc] init];
 	
 	return self;
 
@@ -39,69 +48,141 @@ static NSString * const kIRTextAttributorTaggingAttributeName = @"_IRTextAttribu
 
 - (void) dealloc {
 
-	[potentialSubstringDiscoveryBlock release];
-	[substringAttributingBlock release];
+	[attributedContent release];
+	[discoveryBlock release];
+	[attributionBlock release];
+	
+	[queue cancelAllOperations];
+	[queue waitUntilAllOperationsAreFinished];
 	[queue release];
+	
+	[cache release];
 	
 	[super dealloc];
 
 }
 
-- (void) haltDiscovery:(NSMutableAttributedString *)workingAttributedString {
+- (void) setAttributedContent:(NSMutableAttributedString *)newAttributedContent {
 
-	[[self.queue.operations filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(IRTextAttributionOperation *anOperation, NSDictionary *bindings) {
+	if (attributedContent == newAttributedContent)
+		return;
 	
-		return anOperation.attributedString == workingAttributedString;
-	
-	}]] enumerateObjectsUsingBlock:^(NSOperation *anOperation, NSUInteger idx, BOOL *stop) {
-		
-		[anOperation cancel];
-		
-	}];
+	[attributedContent release];
+	attributedContent = [newAttributedContent retain];
+
+	[self performGlobalDiscovery];
 
 }
 
-- (void) noteMutableAttributedStringDidChange:(NSMutableAttributedString *)aMutableAttributedString {
+- (void) performGlobalDiscovery {
 
-	NSParameterAssert(self.potentialSubstringDiscoveryBlock);
+	__block __typeof__(self) nrSelf = self;
 	
-	[aMutableAttributedString retain];
-	NSString *baseString = [aMutableAttributedString string];
+	NSMutableAttributedString *capturedAttributedContent = self.attributedContent;
 	
-	self.potentialSubstringDiscoveryBlock(baseString, ^ (NSString *substring, NSRange rangeOfSubstring) {
+	NSString *baseString = [capturedAttributedContent string];
 	
-		NSLog(@"found a potential attribute backing string %@ at %@", substring, NSStringFromRange(rangeOfSubstring));
+	self.discoveryBlock(baseString, ^ (NSRange aRange) {
+	
+		NSString *substring = [baseString substringWithRange:aRange];
 		
-		NSRange usedRange = rangeOfSubstring;
-		NSDictionary *attributesAtIndex = [aMutableAttributedString attributesAtIndex:rangeOfSubstring.location effectiveRange:&usedRange];
+		//	If the discovered range already has a tag, bail
 		
-		NSLog(@"discovered are %@", attributesAtIndex);
+		NSRange currentTagRange = (NSRange){ 0, 0 };
+		id currentAttribute = [capturedAttributedContent attribute:kIRTextAttributorTag atIndex:aRange.location effectiveRange:&currentTagRange];
+	
+		if (currentAttribute) {
+			NSLog(@"tag already exists at range %@", NSStringFromRange(aRange));
+			return;
+		}
 		
-		if (![attributesAtIndex objectForKey:kIRTextAttributorTaggingAttributeName]) {
 		
-			IRTextAttributionOperation *operation = [[[IRTextAttributionOperation alloc] init] autorelease];
-			
-			operation.workerBlock = ^ (void(^aCallback)(id)) {
-			
-				self.substringAttributingBlock(substring, ^ (NSString *substring, id discoveredAttribute){
-			
-					NSLog(@"for %@, found %@", substring, discoveredAttribute);
-					
-					if (aCallback)
-						aCallback(discoveredAttribute);
-				
-				});
-			
-			};
+		//	If the discovered range already has a cached attribute,
+		//	set it and then bail
 		
-			//	TBD kick off an operation for the specific attribute, and then stitch it to the string
+		id cachedAttribute = [nrSelf.cache objectForKey:substring];
+		if (cachedAttribute) {
+		
+			[nrSelf willLoadAttribute:cachedAttribute forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
 			
-			[aMutableAttributedString addAttribute:kIRTextAttributorTaggingAttributeName value:nil range:usedRange];
+			[capturedAttributedContent addAttribute:kIRTextAttributorTag value:cachedAttribute range:aRange];
+			
+			[nrSelf didLoadAttribute:cachedAttribute forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
+			
+			return;
 		
 		}
-	
+		
+		
+		//	Go and fetch.
+		
+		__block IRTextAttributionOperation *operation = [IRTextAttributionOperation operationWithWorkerBlock:^(void(^callbackBlock)(id results)) {
+		
+			nrSelf.attributionBlock(substring, ^ (id attribute) {
+				
+				callbackBlock(attribute);
+				
+			});
+			
+		} completionBlock: ^ (id results) {
+		
+			[[operation retain] autorelease];
+			
+			[capturedAttributedContent removeAttribute:kIRTextAttributorTag range:aRange];
+			
+			if (results) {	
+				
+				[nrSelf willLoadAttribute:results forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
+				
+				[nrSelf.cache setObject:results forKey:substring];
+				[capturedAttributedContent addAttribute:kIRTextAttributorTag value:results range:aRange];
+
+				[nrSelf didLoadAttribute:results forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
+
+			}
+			
+		}];
+		
+		[capturedAttributedContent addAttribute:kIRTextAttributorTag value:operation range:aRange];
+		
+		[self.queue addOperation:operation];
+		
 	});
 
 }
 
+- (void) willLoadAttribute:(id)anAttribute forToken:(NSString *)aString inAttributedString:(NSAttributedString *)hostingAttributedString withSubstringRange:(NSRange)aRange {
+
+	if (hostingAttributedString != self.attributedContent)
+		return;
+	
+	[self.delegate textAttributor:self willUpdateAttributedString:self.attributedContent withToken:aString range:aRange attribute:anAttribute];
+
+}
+
+- (void) didLoadAttribute:(id)anAttribute forToken:(NSString *)aString inAttributedString:(NSAttributedString *)hostingAttributedString withSubstringRange:(NSRange)aRange {
+
+	if (hostingAttributedString != self.attributedContent)
+		return;
+	
+	[self.delegate textAttributor:self didUpdateAttributedString:self.attributedContent withToken:aString range:aRange attribute:anAttribute];
+
+}
+
 @end
+
+IRTextAttributorDiscoveryBlock IRTextAttributorDiscoveryBlockMakeWithRegularExpression (NSRegularExpression *anExpression) {
+
+	return [[ ^ (NSString *entireString, IRTextAttributorDiscoveryCallback callback) {
+	
+		NSRange entireRange = (NSRange){ 0, [entireString length] };
+	
+		[anExpression enumerateMatchesInString:entireString options:0 range:entireRange usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+		
+			callback(result.range);
+			
+		}];
+	
+	} copy] autorelease];
+
+}

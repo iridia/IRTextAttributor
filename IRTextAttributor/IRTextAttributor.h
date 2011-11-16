@@ -12,13 +12,11 @@
 #ifndef __IRTextAttributor__
 #define __IRTextAttributor__
 
-typedef void (^IRTextAttributorSubstringDiscoveryCallback) (NSString *substring, NSRange rangeOfSubstring);
+typedef void (^IRTextAttributorDiscoveryCallback) (NSRange rangeOfSubstring);
+typedef void (^IRTextAttributorAttributionCallback) (id discoveredAttributeOrNil);
 
-typedef void (^IRTextAttributorDiscoveryBlock) (NSString *baseString, IRTextAttributorSubstringDiscoveryCallback callbackOnSubstringDiscovery);
-
-typedef void (^IRTextAttributorAttributeDiscoveryCallback) (NSString *substring, id discoveredAttribute);
-
-typedef void (^IRTextAttributorAttributeDiscoveryBlock) (NSString *potentialSubstring, IRTextAttributorAttributeDiscoveryCallback callbackOnLatentAttributeDiscovery);
+typedef void (^IRTextAttributorDiscoveryBlock) (NSString *entireString, IRTextAttributorDiscoveryCallback callback);
+typedef void (^IRTextAttributorAttributionBlock) (NSString *attributedString, IRTextAttributorAttributionCallback callback);
 
 #endif
 
@@ -26,23 +24,21 @@ typedef void (^IRTextAttributorAttributeDiscoveryBlock) (NSString *potentialSubs
 @class IRTextAttributor;
 @protocol IRTextAttributorDelegate <NSObject>
 
-- (id) textAttributor:(IRTextAttributor *)attributor replacementAttributeForProposedAttribute:(id)anAttribute forBaseString:(NSString *)aBaseString usingString:(NSString **)usedString attributeName:(NSString **)usedAttributeName;
+- (void) textAttributor:(IRTextAttributor *)attributor willUpdateAttributedString:(NSAttributedString *)attributedString withToken:(NSString *)aToken	range:(NSRange)tokenRange attribute:(id)newAttribute;
+
+- (void) textAttributor:(IRTextAttributor *)attributor didUpdateAttributedString:(NSAttributedString *)attributedString withToken:(NSString *)aToken	range:(NSRange)tokenRange attribute:(id)newAttribute;;
 
 @end
 
 
 @interface IRTextAttributor : NSObject
 
-- (void) noteMutableAttributedStringDidChange:(NSMutableAttributedString *)aMutableAttributedString;
-
-- (void) haltDiscovery:(NSMutableAttributedString *)workingAttributedString;
-
+@property (nonatomic, readwrite, retain) NSMutableAttributedString *attributedContent;
 @property (nonatomic, readwrite, assign) id<IRTextAttributorDelegate> delegate;
 
-@property (nonatomic, readwrite, copy) IRTextAttributorDiscoveryBlock potentialSubstringDiscoveryBlock;
-
-//	Generally you’ll want to use NSRegularExpression, in that case I think  enumeration can be done sequentially.  Parallel enumeration is not tested and I have no idea if it would even work at all.
-
-@property (nonatomic, readwrite, copy) IRTextAttributorAttributeDiscoveryBlock substringAttributingBlock;
+@property (nonatomic, readwrite, copy) IRTextAttributorDiscoveryBlock discoveryBlock;
+@property (nonatomic, readwrite, copy) IRTextAttributorAttributionBlock attributionBlock;
 
 @end
+
+extern IRTextAttributorDiscoveryBlock IRTextAttributorDiscoveryBlockMakeWithRegularExpression (NSRegularExpression *anExpression);
