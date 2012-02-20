@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 
 
+extern NSString * const IRTextAttributorTagAttributeName;
+
+
 #ifndef __IRTextAttributor__
 #define __IRTextAttributor__
 

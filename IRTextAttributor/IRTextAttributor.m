@@ -10,7 +10,7 @@
 #import "IRTextAttributionOperation.h"
 
 
-static NSString * const kIRTextAttributorTag = @"_IRTextAttributorTag";
+NSString * const IRTextAttributorTagAttributeName = @"_IRTextAttributorTag";
 
 
 @interface IRTextAttributor ()
@@ -89,7 +89,7 @@ static NSString * const kIRTextAttributorTag = @"_IRTextAttributorTag";
 		//	If the discovered range already has a tag, bail
 		
 		NSRange currentTagRange = (NSRange){ 0, 0 };
-		id currentAttribute = [capturedAttributedContent attribute:kIRTextAttributorTag atIndex:aRange.location effectiveRange:&currentTagRange];
+		id currentAttribute = [capturedAttributedContent attribute:IRTextAttributorTagAttributeName atIndex:aRange.location effectiveRange:&currentTagRange];
 	
 		if (currentAttribute) {
 			NSLog(@"tag already exists at range %@", NSStringFromRange(aRange));
@@ -105,7 +105,7 @@ static NSString * const kIRTextAttributorTag = @"_IRTextAttributorTag";
 		
 			[nrSelf willLoadAttribute:cachedAttribute forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
 			
-			[capturedAttributedContent addAttribute:kIRTextAttributorTag value:cachedAttribute range:aRange];
+			[capturedAttributedContent addAttribute:IRTextAttributorTagAttributeName value:cachedAttribute range:aRange];
 			
 			[nrSelf didLoadAttribute:cachedAttribute forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
 			
@@ -128,14 +128,14 @@ static NSString * const kIRTextAttributorTag = @"_IRTextAttributorTag";
 		
 			[[operation retain] autorelease];
 			
-			[capturedAttributedContent removeAttribute:kIRTextAttributorTag range:aRange];
+			[capturedAttributedContent removeAttribute:IRTextAttributorTagAttributeName range:aRange];
 			
 			if (results) {	
 				
 				[nrSelf willLoadAttribute:results forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
 				
 				[nrSelf.cache setObject:results forKey:substring];
-				[capturedAttributedContent addAttribute:kIRTextAttributorTag value:results range:aRange];
+				[capturedAttributedContent addAttribute:IRTextAttributorTagAttributeName value:results range:aRange];
 
 				[nrSelf didLoadAttribute:results forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
 
@@ -143,7 +143,7 @@ static NSString * const kIRTextAttributorTag = @"_IRTextAttributorTag";
 			
 		}];
 		
-		[capturedAttributedContent addAttribute:kIRTextAttributorTag value:operation range:aRange];
+		[capturedAttributedContent addAttribute:IRTextAttributorTagAttributeName value:operation range:aRange];
 		
 		[self.queue addOperation:operation];
 		
