@@ -21,7 +21,6 @@ NSString * const IRTextAttributorTagAttributeName = @"_IRTextAttributorTag";
 - (void) performGlobalDiscovery;
 
 - (void) willLoadAttribute:(id)anAttribute forToken:(NSString *)aString inAttributedString:(NSAttributedString *)hostingAttributedString withSubstringRange:(NSRange)aRange;
-
 - (void) didLoadAttribute:(id)anAttribute forToken:(NSString *)aString inAttributedString:(NSAttributedString *)hostingAttributedString withSubstringRange:(NSRange)aRange;
 
 @end

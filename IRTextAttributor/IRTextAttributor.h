@@ -28,8 +28,9 @@ typedef void (^IRTextAttributorAttributionBlock) (NSString *attributedString, IR
 @protocol IRTextAttributorDelegate <NSObject>
 
 - (void) textAttributor:(IRTextAttributor *)attributor willUpdateAttributedString:(NSAttributedString *)attributedString withToken:(NSString *)aToken	range:(NSRange)tokenRange attribute:(id)newAttribute;
-
 - (void) textAttributor:(IRTextAttributor *)attributor didUpdateAttributedString:(NSAttributedString *)attributedString withToken:(NSString *)aToken	range:(NSRange)tokenRange attribute:(id)newAttribute;;
+
+
 
 @end
 
@@ -41,6 +42,9 @@ typedef void (^IRTextAttributorAttributionBlock) (NSString *attributedString, IR
 
 @property (nonatomic, readwrite, copy) IRTextAttributorDiscoveryBlock discoveryBlock;
 @property (nonatomic, readwrite, copy) IRTextAttributorAttributionBlock attributionBlock;
+
+@property (nonatomic, readonly, retain) NSOperationQueue *queue;
+//		[something irBind:@"isBusy" toObject:attributor withKeyPath:@"queue.operations" options:nil];
 
 @end
 
