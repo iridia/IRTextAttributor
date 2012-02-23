@@ -28,9 +28,7 @@ typedef void (^IRTextAttributorAttributionBlock) (NSString *attributedString, IR
 @protocol IRTextAttributorDelegate <NSObject>
 
 - (void) textAttributor:(IRTextAttributor *)attributor willUpdateAttributedString:(NSAttributedString *)attributedString withToken:(NSString *)aToken	range:(NSRange)tokenRange attribute:(id)newAttribute;
-- (void) textAttributor:(IRTextAttributor *)attributor didUpdateAttributedString:(NSAttributedString *)attributedString withToken:(NSString *)aToken	range:(NSRange)tokenRange attribute:(id)newAttribute;;
-
-
+- (void) textAttributor:(IRTextAttributor *)attributor didUpdateAttributedString:(NSAttributedString *)attributedString withToken:(NSString *)aToken	range:(NSRange)tokenRange attribute:(id)newAttribute;
 
 @end
 
