@@ -52,7 +52,7 @@ NSString * const IRTextAttributorTagAttributeName = @"_IRTextAttributorTag";
 	[attributionBlock release];
 	
 	[queue cancelAllOperations];
-	[queue waitUntilAllOperationsAreFinished];
+	//	[queue waitUntilAllOperationsAreFinished];	Waiting on the main thread is dangerous
 	[queue release];
 	
 	[cache release];

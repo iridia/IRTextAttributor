@@ -119,7 +119,7 @@
 
 - (void) cancel {
 
-	dispatch_async(self.actualDispatchQueue, ^ {
+	dispatch_async((self.actualDispatchQueue ? self.actualDispatchQueue : dispatch_get_main_queue()), ^ {
 		
 		self.executing = NO;
 		self.finished = YES;
