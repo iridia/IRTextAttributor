@@ -47,17 +47,7 @@ NSString * const IRTextAttributorTagAttributeName = @"_IRTextAttributorTag";
 
 - (void) dealloc {
 
-	[attributedContent release];
-	[discoveryBlock release];
-	[attributionBlock release];
-	
 	[queue cancelAllOperations];
-	//	[queue waitUntilAllOperationsAreFinished];	Waiting on the main thread is dangerous
-	[queue release];
-	
-	[cache release];
-	
-	[super dealloc];
 
 }
 
@@ -66,8 +56,7 @@ NSString * const IRTextAttributorTagAttributeName = @"_IRTextAttributorTag";
 	if (attributedContent == newAttributedContent)
 		return;
 	
-	[attributedContent release];
-	attributedContent = [newAttributedContent retain];
+	attributedContent = newAttributedContent;
 
 	[self performGlobalDiscovery];
 
@@ -75,13 +64,16 @@ NSString * const IRTextAttributorTagAttributeName = @"_IRTextAttributorTag";
 
 - (void) performGlobalDiscovery {
 
-	__block __typeof__(self) nrSelf = self;
+	__weak IRTextAttributor *wSelf = self;
 	
 	NSMutableAttributedString *capturedAttributedContent = self.attributedContent;
 	
 	NSString *baseString = [capturedAttributedContent string];
 	
 	self.discoveryBlock(baseString, ^ (NSRange aRange) {
+	
+		if (!wSelf)
+			return;
 	
 		NSString *substring = [baseString substringWithRange:aRange];
 		
@@ -95,18 +87,17 @@ NSString * const IRTextAttributorTagAttributeName = @"_IRTextAttributorTag";
 			return;
 		}
 		
-		
 		//	If the discovered range already has a cached attribute,
 		//	set it and then bail
 		
-		id cachedAttribute = [nrSelf.cache objectForKey:substring];
+		id cachedAttribute = [wSelf.cache objectForKey:substring];
 		if (cachedAttribute) {
 		
-			[nrSelf willLoadAttribute:cachedAttribute forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
+			[wSelf willLoadAttribute:cachedAttribute forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
 			
 			[capturedAttributedContent addAttribute:IRTextAttributorTagAttributeName value:cachedAttribute range:aRange];
 			
-			[nrSelf didLoadAttribute:cachedAttribute forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
+			[wSelf didLoadAttribute:cachedAttribute forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
 			
 			return;
 		
@@ -117,34 +108,34 @@ NSString * const IRTextAttributorTagAttributeName = @"_IRTextAttributorTag";
 		
 		__block IRTextAttributionOperation *operation = [IRTextAttributionOperation operationWithWorkerBlock:^(void(^callbackBlock)(id results)) {
 		
-			nrSelf.attributionBlock(substring, ^ (id attribute) {
+			wSelf.attributionBlock(substring, ^ (id attribute) {
 				
 				callbackBlock(attribute);
 				
 			});
 			
 		} completionBlock: ^ (id results) {
-		
-			[[operation retain] autorelease];
 			
 			[capturedAttributedContent removeAttribute:IRTextAttributorTagAttributeName range:aRange];
 			
 			if (results) {	
 				
-				[nrSelf willLoadAttribute:results forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
+				[wSelf willLoadAttribute:results forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
 				
-				[nrSelf.cache setObject:results forKey:substring];
+				[wSelf.cache setObject:results forKey:substring];
 				[capturedAttributedContent addAttribute:IRTextAttributorTagAttributeName value:results range:aRange];
 
-				[nrSelf didLoadAttribute:results forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
+				[wSelf didLoadAttribute:results forToken:substring inAttributedString:capturedAttributedContent withSubstringRange:aRange];
 
 			}
+			
+			operation = nil;
 			
 		}];
 		
 		[capturedAttributedContent addAttribute:IRTextAttributorTagAttributeName value:operation range:aRange];
 		
-		[self.queue addOperation:operation];
+		[wSelf.queue addOperation:operation];
 		
 	});
 
@@ -172,7 +163,7 @@ NSString * const IRTextAttributorTagAttributeName = @"_IRTextAttributorTag";
 
 IRTextAttributorDiscoveryBlock IRTextAttributorDiscoveryBlockMakeWithRegularExpression (NSRegularExpression *anExpression) {
 
-	return [[ ^ (NSString *entireString, IRTextAttributorDiscoveryCallback callback) {
+	return [ ^ (NSString *entireString, IRTextAttributorDiscoveryCallback callback) {
 	
 		NSRange entireRange = (NSRange){ 0, [entireString length] };
 	
@@ -182,6 +173,6 @@ IRTextAttributorDiscoveryBlock IRTextAttributorDiscoveryBlockMakeWithRegularExpr
 			
 		}];
 	
-	} copy] autorelease];
+	} copy];
 
 }

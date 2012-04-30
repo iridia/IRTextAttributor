@@ -27,20 +27,10 @@
 
 + (IRTextAttributionOperation *) operationWithWorkerBlock:(void (^)(void(^)(id results)))aWorkerBlock completionBlock:(void(^)(id results))aCompletionBlock {
 
-	IRTextAttributionOperation *returnedOperation = [[[self alloc] init] autorelease];
+	IRTextAttributionOperation *returnedOperation = [[self alloc] init];
 	returnedOperation.workerBlock = aWorkerBlock;
 	returnedOperation.workCompletionBlock = aCompletionBlock;
 	return returnedOperation;
-
-}
-
-- (void) dealloc {
-
-	[workerBlock release];
-	[workCompletionBlock release];
-	[results release];
-	
-	[super dealloc];
 
 }
 
@@ -138,9 +128,9 @@
 		if (!self.workerBlock)
 			return;
 			
-		self.workerBlock([[ ^ (id incomingResults) {
+		self.workerBlock([ ^ (id incomingResults) {
 			[self concludeWithResults:incomingResults];
-		} copy] autorelease]);
+		} copy]);
 		
 	}];
 
